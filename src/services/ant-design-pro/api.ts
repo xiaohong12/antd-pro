@@ -83,3 +83,10 @@ export async function removeRule(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+export async function getMenues(options?: { [key: string]: any }) {
+  return request<any>('/server/api/admin/menu', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}

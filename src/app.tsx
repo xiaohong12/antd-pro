@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
+import { getMenues } from "./services/ant-design-pro/api"
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -60,7 +61,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     //   content: initialState?.currentUser?.name,
     // },
     footerRender: () => <Footer />,
-    onPageChange: () => {
+    onPageChange: async () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
@@ -92,6 +93,25 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </>
       );
     },
+    menu:{
+      request: async()=>{
+          const menue=await getMenues()
+          return  menue.data.routes
+      }
+    },
     ...initialState?.settings,
   };
+};
+
+const ResponseInterceptors = async (response: Response, options: any) => {
+  const res = await response.clone().json(); //这里是关键，获取所有接口请求成功之后的数据
+  //token失效
+  if(res.code=="9999"){
+    history.push(loginPath)
+  }
+  return response
+}
+
+export const request: RequestConfig = {
+  responseInterceptors: [ResponseInterceptors],
 };
