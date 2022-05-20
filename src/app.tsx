@@ -108,7 +108,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
 
 menuItemRender: (menuItemProps, defaultDom) => {
-  console.log(menuItemProps)
   if (menuItemProps.isUrl || !menuItemProps.path) {
    return defaultDom;
   }
