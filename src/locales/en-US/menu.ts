@@ -49,4 +49,27 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+
+  'menu.控制台':"Home",
+  'menu.控制台.案件列表':"Case List",
+
+  'menu.催收配置':"Collection Configuration",
+  'menu.催收配置.公司管理':"Company Management",
+  'menu.催收配置.进件产品管理':"Incoming Product Management",
+  'menu.催收配置.催收阶段配置':"Collection Stage Configuration",
+
+  'menu.数据统计':"Statistics",
+  'menu.数据统计.催收业绩':"Collection Performance",
+  'menu.数据统计.产品推单数据':"Product Push Data",
+
+  'menu.配置模块':"Configuration Module",
+  'menu.配置模块.角色管理':"Role Management",
+  'menu.配置模块.账号管理':"Account Management",
+  'menu.配置模块.菜单管理':"Menu Management",
+
+  "menu.首页":"Home",
+  "menu.500":"500",
+  "menu.403":"403",
+  "menu.400":"400",
+  "menu.404":"404"
 };

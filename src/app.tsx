@@ -6,10 +6,12 @@ import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import  { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import { getMenues } from "./services/ant-design-pro/api"
-
+import { fromatMenue } from './app_config';
+import * as allIcons from '@ant-design/icons';
+import React from 'react';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -94,11 +96,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       );
     },
     menu:{
+      defaultOpenAll:true,
+      locale:true,
       request: async()=>{
           const menue=await getMenues()
-          return  menue.data.routes
+          return fromatMenue(menue.data.routes)
       }
     },
+    menuDataRender:(menuData:any[])=>{
+     return  fixMenuItemIcon(menuData)
+    },
+
+menuItemRender: (menuItemProps, defaultDom) => {
+  console.log(menuItemProps)
+  if (menuItemProps.isUrl || !menuItemProps.path) {
+   return defaultDom;
+  }
+  return (<Link to={menuItemProps.path}>{
+    menuItemProps.pro_layout_parentKeys&& 
+    menuItemProps.pro_layout_parentKeys.length > 0 &&
+    menuItemProps.icon}{defaultDom}</Link>
+  )},
     ...initialState?.settings,
   };
 };
@@ -114,4 +132,20 @@ const ResponseInterceptors = async (response: Response, options: any) => {
 
 export const request: RequestConfig = {
   responseInterceptors: [ResponseInterceptors],
+};
+
+ const fixMenuItemIcon = (menus:any[], iconType = 'Outlined') => {
+  menus.length > 0 &&
+    menus.forEach((item) => {
+      const { icon, routes } = item;
+      if (item?.hideInMenu == 0 || !item?.hideInMenu) {
+        if (typeof icon === 'string') {
+          const fixIconName = icon.slice(0, 1).toLocaleUpperCase() + icon.slice(1) + iconType;
+          let Element = allIcons[fixIconName] || allIcons[icon] || '';
+          item.icon = Element ? React.createElement(Element) : '';
+        }
+        routes && routes.length > 0 ? (item.children = fixMenuItemIcon(routes)) : null;
+      }
+    });
+  return menus;
 };

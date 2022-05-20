@@ -1,10 +1,11 @@
-// import { getMenues } from "./services/ant-design-pro/api"
-// import _ from "lodash"
-// const getMenue=async()=>{
-//    const menues=await getMenues()
-//    console.log( menues.data.routes)
-//    return menues.data.routes
-// }
-// export {
-//     getMenue
-// }
+import _ from 'lodash'
+const fromatMenue=(menue:any[],isFirst=true)=>{
+      menue.forEach((item)=>{
+        item.icon=!isFirst?'smile':"crown"
+        item?.children?.length>0?fromatMenue(item?.children,false):null
+    })
+    return menue
+}
+export {
+    fromatMenue
+}
