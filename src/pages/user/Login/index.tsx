@@ -13,6 +13,7 @@ import { useIntl, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import moment from 'moment'
 
 import styles from './index.less';
 
@@ -32,15 +33,18 @@ const LoginMessage: React.FC<{
 const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-  const [captcha,setCaptcha]=useState<string>()
+  const [captcha,setCaptcha]=useState<string>(null);
   const intl = useIntl();
 
   useEffect(()=>{
-    getFakeCaptcha().then((res)=>{
-      setCaptcha(res?.data?.img)
-    })
+    getCaptcha()
   },[])
 
+ const getCaptcha=async()=>{
+  const captcha= await  getFakeCaptcha()
+  let url=captcha?.data?.img+'?'+Math.random()
+  setCaptcha(url)
+  }
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
@@ -55,6 +59,7 @@ const Login: React.FC = () => {
     try {
       // 登录
       const msg = await login({ ...values });
+      console.log(msg)
       if (msg.code ===1) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
@@ -156,7 +161,8 @@ const Login: React.FC = () => {
               fieldProps={{
                   size: 'large',
                   prefix: <CodeOutlined className={styles.prefixIcon} />,
-                  suffix: <>{captcha&&<img src={captcha} className={styles.captch}></img>}</>,
+                  suffix: <>{captcha&&<img src={captcha} className={styles.captch} onClick={()=>{getCaptcha()}}></img>}
+                  {!captcha&&<div className={styles.captch}></div>}</>,
                   maxLength:4,
                 }}
                 rules={[{

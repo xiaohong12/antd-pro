@@ -111,10 +111,11 @@ menuItemRender: (menuItemProps, defaultDom) => {
   if (menuItemProps.isUrl || !menuItemProps.path) {
    return defaultDom;
   }
-  return (<Link to={menuItemProps.path}>{
+  return (<Link to={menuItemProps.path}><p>
+    {
     menuItemProps.pro_layout_parentKeys&& 
     menuItemProps.pro_layout_parentKeys.length > 0 &&
-    menuItemProps.icon}{defaultDom}</Link>
+    menuItemProps.icon}{defaultDom}</p></Link>
   )},
     ...initialState?.settings,
   };
@@ -123,7 +124,8 @@ menuItemRender: (menuItemProps, defaultDom) => {
 const ResponseInterceptors = async (response: Response, options: any) => {
   const res = await response.clone().json(); //这里是关键，获取所有接口请求成功之后的数据
   //token失效
-  if(res.code=="9999"){
+  if(res.code=="99999"){
+    window.localStorage.clear()
     history.push(loginPath)
   }
   return response
